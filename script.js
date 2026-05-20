@@ -205,5 +205,78 @@ let currentArray = [];
                 k++;
             }
         }
+// --- QUICK SORT ---
+
+async function quickSort() {
+    disableControls();
+    let bars = document.getElementsByClassName("bar");
+    
+    // Start the recursive sorting process
+    await quickSortHelper(currentArray, 0, currentArray.length - 1, bars);
+
+    // Final green sweep when completely finished
+    for(let k = 0; k < currentArray.length; k++) {
+        bars[k].style.backgroundColor = "#50E3C2";
+        await sleep(getDelay() / 3); 
+    }
+    enableControls();
+}
+
+async function quickSortHelper(arr, low, high, bars) {
+    if (low < high) {
+        // Find the pivot index
+        let pi = await partition(arr, low, high, bars);
+        
+        // Recursively sort the left side of the pivot
+        await quickSortHelper(arr, low, pi - 1, bars);
+        // Recursively sort the right side of the pivot
+        await quickSortHelper(arr, pi + 1, high, bars);
+    }
+}
+
+async function partition(arr, low, high, bars) {
+    // We choose the last element in the section as our pivot
+    let pivot = arr[high];
+    let i = low - 1;
+
+    // Color the pivot YELLOW so we can track it
+    bars[high].style.backgroundColor = "#F5A623"; 
+    
+    for (let j = low; j < high; j++) {
+        // Color the current element RED as we scan
+        bars[j].style.backgroundColor = "#E24A4A"; 
+        await sleep(getDelay());
+
+        if (arr[j] < pivot) {
+            i++;
+            // Swap the actual numbers
+            let temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+
+            // Swap the visual bar heights
+            bars[i].style.height = arr[i] + "px";
+            bars[j].style.height = arr[j] + "px";
+        }
+        
+        // Revert the scanned bar back to BLUE
+        bars[j].style.backgroundColor = "#4A90E2"; 
+    }
+
+    // Move the pivot to its final, correct position
+    let temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+
+    bars[i + 1].style.height = arr[i + 1] + "px";
+    bars[high].style.height = arr[high] + "px";
+
+    // Revert the pivot colors back to BLUE
+    bars[high].style.backgroundColor = "#4A90E2"; 
+    bars[i + 1].style.backgroundColor = "#4A90E2"; 
+
+    // Return the final index of the pivot
+    return i + 1;
+}
 
         generateArray();
