@@ -116,5 +116,94 @@ let currentArray = [];
             let buttons = document.querySelectorAll("button");
             buttons.forEach(btn => btn.disabled = false);
         }
+// --- MERGE SORT ---
+
+async function mergeSort() {
+    disableControls();
+    let bars = document.getElementsByClassName("bar");
+    
+    // Start the recursive chopping process
+    await mergeSortHelper(currentArray, 0, currentArray.length - 1, bars);
+
+    // When all the recursion finishes, do the final green sweep
+    for(let k = 0; k < currentArray.length; k++) {
+        bars[k].style.backgroundColor = "#50E3C2";
+        await sleep(getDelay() / 3); 
+    }
+    enableControls();
+}
+
+// The function that chops the array in half
+async function mergeSortHelper(arr, left, right, bars) {
+    if (left >= right) {
+        return;
+    }
+    
+    let mid = left + Math.floor((right - left) / 2);
+
+    // Chop and sort the left side
+    await mergeSortHelper(arr, left, mid, bars);
+    // Chop and sort the right side
+    await mergeSortHelper(arr, mid + 1, right, bars);
+
+    // Stitch them back together
+    await merge(arr, left, mid, right, bars);
+}
+
+// The function that stitches two sections together and draws it
+async function merge(arr, left, mid, right, bars) {
+    let n1 = mid - left + 1;
+    let n2 = right - mid;
+    
+    // Create temporary arrays for the two halves
+    let leftArr = new Array(n1);
+    let rightArr = new Array(n2);
+
+    for (let i = 0; i < n1; i++) leftArr[i] = arr[left + i];
+    for (let j = 0; j < n2; j++) rightArr[j] = arr[mid + 1 + j];
+
+    let i = 0, j = 0, k = left;
+
+    // Compare values from the two temporary arrays and overwrite the main array
+    while (i < n1 && j < n2) {
+        bars[k].style.backgroundColor = "#E24A4A"; // Color the bar RED while editing
+        await sleep(getDelay());
+        
+        if (leftArr[i] <= rightArr[j]) {
+            arr[k] = leftArr[i];
+            i++;
+        } else {
+            arr[k] = rightArr[j];
+            j++;
+        }
+        
+        // Update the visual height
+        bars[k].style.height = arr[k] + "px";
+        bars[k].style.backgroundColor = "#4A90E2"; // Turn back to BLUE
+        k++;
+    }
+
+    // Clean up any remaining elements in the left array
+    while (i < n1) {
+        bars[k].style.backgroundColor = "#E24A4A";
+        await sleep(getDelay());
+        arr[k] = leftArr[i];
+        bars[k].style.height = arr[k] + "px";
+        bars[k].style.backgroundColor = "#4A90E2";
+        i++;
+        k++;
+    }
+
+    // Clean up any remaining elements in the right array
+    while (j < n2) {
+        bars[k].style.backgroundColor = "#E24A4A";
+        await sleep(getDelay());
+        arr[k] = rightArr[j];
+        bars[k].style.height = arr[k] + "px";
+        bars[k].style.backgroundColor = "#4A90E2";
+        j++;
+        k++;
+    }
+}
 
         generateArray();
