@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tree Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* A simple navigation bar */
+        nav {
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: #4A90E2;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #50E3C2;
+        }
+        /* Custom styling for the canvas */
+        canvas {
+            background-color: #2D2D2D;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        #bst-input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            width: 150px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html">Sorting Visualizer</a>
+        <a href="tree.html">Tree Visualizer</a>
+    </nav>
+
+    <h1>Binary Search Tree</h1>
+    
+    <div id="controls">
+        <input type="number" id="bst-input" placeholder="Enter a number">
+        <button onclick="insertNode()">Insert Node</button>
+        <button onclick="resetTree()" style="background-color: #E24A4A;">Reset Tree</button>
+    </div>
+
+    <!-- The Canvas: 800 pixels wide, 500 pixels tall -->
+    <canvas id="bst-canvas" width="800" height="500"></canvas>
+
+    <script src="tree.js"></script>
+</body>
+</html>
