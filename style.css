@@ -62,3 +62,33 @@ body {
             opacity: 0.5;
             cursor: not-allowed;
         }
+
+/* --- PATHFINDING GRID STYLES --- */
+#grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    /* Prevents the browser from selecting text while dragging to draw walls */
+    user-select: none; 
+}
+
+.grid-row {
+    display: flex;
+}
+
+.node {
+    width: 25px;
+    height: 25px;
+    border: 1px solid #444444;
+    background-color: white;
+    /* Smooth color transition when the algorithm runs */
+    transition: background-color 0.2s ease; 
+}
+
+/* Specific node states */
+.node-wall { background-color: #1E1E1E; border-color: #1E1E1E; }
+.node-start { background-color: #50E3C2; }
+.node-end { background-color: #E24A4A; }
+.node-visited { background-color: #4A90E2; }
+.node-path { background-color: #F5A623; }
