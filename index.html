@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DSA Visualizer</title>
+    <style>
+        body {
+            background-color: #1E1E1E;
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 50px;
+            color: #4A90E2;
+        }
+
+        .menu {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            background-color: #2D2D2D;
+            padding: 30px;
+            border-radius: 10px;
+            width: 200px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            text-decoration: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background-color: #3D3D3D;
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #AAA;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>DSA Visualizer</h1>
+
+    <div class="menu">
+        <a href="sorting.html" class="card">
+            <h2>Sorting</h2>
+            <p>Bubble, Insertion and more</p>
+        </a>
+        <a href="pathfinding.html" class="card">
+            <h2>Pathfinding</h2>
+            <p>BFS & DFS on interactive grid</p>
+        </a>
+        <a href="bst.html" class="card">
+            <h2>BST</h2>
+            <p>Binary Search Tree on Canvas</p>
+        </a>
+    </div>
+
+</body>
+</html>

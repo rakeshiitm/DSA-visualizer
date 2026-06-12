@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BST Visualizer</title>
+    <style>
+        body {
+            background-color: #1E1E1E;
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #header {
+            padding: 20px;
+        }
+
+        #controls {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            align-items: center;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 60px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #357ABD;
+        }
+
+        #canvas-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        canvas {
+            background-color: #1E1E1E;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <h1>Binary Search Tree Visualizer</h1>
+        <div id="controls">
+            <button onclick="window.location.href='index.html'" style="background-color: #555;">Back to Home</button>
+            <input type="number" id="node-value" placeholder="Val">
+            <button onclick="insertNode()">Insert</button>
+            <button onclick="resetTree()">Reset</button>
+            <button onclick="randomTree()">Random Tree</button>
+        </div>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="treeCanvas"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('treeCanvas');
+        const ctx = canvas.getContext('2d');
+        const nodeRadius = 20;
+        const verticalSpacing = 60;
+
+        class Node {
+            constructor(value) {
+                this.value = value;
+                this.left = null;
+                this.right = null;
+                this.x = 0;
+                this.y = 0;
+            }
+        }
+
+        let root = null;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * 0.9;
+            canvas.height = window.innerHeight * 0.7;
+            drawTree();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        async function insertNode() {
+            const input = document.getElementById('node-value');
+            const value = parseInt(input.value);
+            if (isNaN(value)) return;
+            input.value = '';
+
+            if (root === null) {
+                root = new Node(value);
+            } else {
+                await insertRecursive(root, value);
+            }
+            drawTree();
+        }
+
+        async function insertRecursive(node, value) {
+            // Highlight current node being compared
+            drawTree(node);
+            await sleep(500);
+
+            if (value < node.value) {
+                if (node.left === null) {
+                    node.left = new Node(value);
+                } else {
+                    await insertRecursive(node.left, value);
+                }
+            } else if (value > node.value) {
+                if (node.right === null) {
+                    node.right = new Node(value);
+                } else {
+                    await insertRecursive(node.right, value);
+                }
+            }
+        }
+
+        function drawTree(highlightNode = null) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (root === null) return;
+
+            // Initial positions
+            updatePositions(root, canvas.width / 2, 50, canvas.width / 4);
+            drawConnections(root);
+            drawNodes(root, highlightNode);
+        }
+
+        function updatePositions(node, x, y, horizontalSpacing) {
+            if (node === null) return;
+            node.x = x;
+            node.y = y;
+            updatePositions(node.left, x - horizontalSpacing, y + verticalSpacing, horizontalSpacing / 1.5);
+            updatePositions(node.right, x + horizontalSpacing, y + verticalSpacing, horizontalSpacing / 1.5);
+        }
+
+        function drawConnections(node) {
+            if (node === null) return;
+
+            if (node.left) {
+                ctx.beginPath();
+                ctx.moveTo(node.x, node.y);
+                ctx.lineTo(node.left.x, node.left.y);
+                ctx.strokeStyle = '#888';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                drawConnections(node.left);
+            }
+
+            if (node.right) {
+                ctx.beginPath();
+                ctx.moveTo(node.x, node.y);
+                ctx.lineTo(node.right.x, node.right.y);
+                ctx.strokeStyle = '#888';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                drawConnections(node.right);
+            }
+        }
+
+        function drawNodes(node, highlightNode) {
+            if (node === null) return;
+
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = (node === highlightNode) ? '#E24A4A' : '#4A90E2';
+            ctx.fill();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = 'white';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(node.value, node.x, node.y);
+
+            drawNodes(node.left, highlightNode);
+            drawNodes(node.right, highlightNode);
+        }
+
+        function resetTree() {
+            root = null;
+            drawTree();
+        }
+
+        async function randomTree() {
+            resetTree();
+            for (let i = 0; i < 10; i++) {
+                const val = Math.floor(Math.random() * 100);
+                if (root === null) {
+                    root = new Node(val);
+                } else {
+                    await insertRecursive(root, val);
+                }
+                drawTree();
+                await sleep(200);
+            }
+        }
+    </script>
+</body>
+</html>
